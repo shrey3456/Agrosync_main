@@ -315,7 +315,8 @@ const OrderManagement = () => {
                         <div>
                             <p className="text-white">{item.name}</p>
                             <p className="text-sm text-gray-400">
-                                Farmer: {order.farmerDetails?.name || order.farmer_details?.name || order.user?.name || 'N/A'}
+                                {/* Farmer: {order.farmerDetails?.name || order.farmer_details?.name || order.user?.name || 'N/A'} */}
+                                Farmer: {item.farmer_id?.name || 'N/A'}
                                 {console.log('Order details:', order)}
                             </p>
                         </div>

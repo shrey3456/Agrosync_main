@@ -994,6 +994,116 @@ export const getFarmerOrders = async (req, res) => {
   }
 };
 
+export const getFarmerStats = async (req, res) => {
+  try {
+    const farmer_id = req.user.id;
+
+    // Get total products count
+    const totalProducts = await Product.countDocuments({ farmer_id });
+
+    // Get orders for this farmer
+    const orders = await Order.find({ 
+      'items.farmer_id': farmer_id 
+    });
+
+    // Calculate total and pending orders
+    const totalOrders = orders.length;
+    const pendingOrders = orders.filter(order => 
+      order.orderStatus === 'processing' || order.orderStatus === 'created'
+    ).length;
+
+    // Calculate total revenue
+    const totalRevenue = orders.reduce((total, order) => {
+      const farmerItems = order.items.filter(item => 
+        item.farmer_id?.toString() === farmer_id
+      );
+      const orderTotal = farmerItems.reduce((sum, item) => 
+        sum + (item.price * item.quantity), 0
+      );
+      return total + orderTotal;
+    }, 0);
+
+    // Get monthly revenue data (last 6 months)
+    const monthlyRevenue = {};
+    const last6Months = new Date();
+    last6Months.setMonth(last6Months.getMonth() - 6);
+
+    orders.forEach(order => {
+      if (new Date(order.createdAt) >= last6Months) {
+        const month = new Date(order.createdAt).toLocaleString('default', { month: 'long' });
+        const farmerItems = order.items.filter(item => 
+          item.farmer_id?.toString() === farmer_id
+        );
+        const orderTotal = farmerItems.reduce((sum, item) => 
+          sum + (item.price * item.quantity), 0
+        );
+        monthlyRevenue[month] = (monthlyRevenue[month] || 0) + orderTotal;
+      }
+    });
+
+    // Get order status distribution
+    const orderStatusCount = {
+      created: 0,
+      processing: 0,
+      shipped: 0,
+      delivered: 0,
+      cancelled: 0
+    };
+
+    orders.forEach(order => {
+      if (orderStatusCount.hasOwnProperty(order.orderStatus)) {
+        orderStatusCount[order.orderStatus]++;
+      }
+    });
+
+    // Get top selling products
+    const productSales = {};
+    orders.forEach(order => {
+      order.items.forEach(item => {
+        if (item.farmer_id?.toString() === farmer_id) {
+          if (!productSales[item.name]) {
+            productSales[item.name] = 0;
+          }
+          productSales[item.name] += item.quantity;
+        }
+      });
+    });
+
+    const topProducts = Object.entries(productSales)
+      .map(([name, quantity]) => ({ name, quantity }))
+      .sort((a, b) => b.quantity - a.quantity)
+      .slice(0, 5);
+
+    // Get monthly orders count
+    const monthlySales = {};
+    orders.forEach(order => {
+      const month = new Date(order.createdAt).toLocaleString('default', { month: 'long' });
+      monthlySales[month] = (monthlySales[month] || 0) + 1;
+    });
+
+    res.json({
+      success: true,
+      stats: {
+        totalProducts,
+        totalOrders,
+        pendingOrders,
+        totalRevenue,
+        monthlyRevenue,
+        orderStatusCount,
+        topProducts,
+        monthlySales
+      }
+    });
+
+  } catch (error) {
+    console.error('Error getting farmer stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error getting statistics'
+    });
+  }
+};
+
 export const orderController = {
   createRazorpayOrder,
   createOrder,
@@ -1008,5 +1118,6 @@ export const orderController = {
   getOrderStats,
   getRecentOrders,
   getFarmerOrders,
+  getFarmerStats  ,
 };
 

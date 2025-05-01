@@ -394,31 +394,107 @@ const getFarmerNotificationMessage = (status, orderNumber) => {
     }
 };
 
+// export const getAllOrders = async (req, res) => {
+//     try {
+//         const page = parseInt(req.query.page) || 1;
+//         const limit = 10; // 10 orders per page
+//         const skip = (page - 1) * limit;
+
+//         // Build filter query
+//         let filterQuery = {};
+
+//         // Order status filter
+//         if (req.query.status) {
+//             filterQuery.orderStatus = req.query.status;
+//         }
+
+//         // Payment status filter
+//         if (req.query.paymentStatus) {
+//             filterQuery.paymentStatus = req.query.paymentStatus;
+//         }
+
+//         // Payment method filter
+//         if (req.query.paymentMethod) {
+//             filterQuery.paymentMethod = req.query.paymentMethod;
+//         }
+
+//         // Date range filter
+//         if (req.query.startDate && req.query.endDate) {
+//             filterQuery.createdAt = {
+//                 $gte: new Date(req.query.startDate),
+//                 $lte: new Date(req.query.endDate)
+//             };
+//         }
+
+//         // Get total count for pagination
+//         const totalOrders = await Order.countDocuments(filterQuery);
+
+//         // Fetch filtered orders
+//         const orders = await Order.find(filterQuery)
+//             .sort({ createdAt: -1 })
+//             .skip(skip)
+//             .limit(limit)
+//             .populate({
+//                 path: 'items.product',
+//                 select: 'name price category farmer_details'
+//             })
+//             .populate({
+//                 path: 'user',
+//                 select: 'name email'
+//             });
+
+//         res.status(200).json({
+//             success: true,
+//             orders,
+//             pagination: {
+//                 currentPage: page,
+//                 totalPages: Math.ceil(totalOrders / limit),
+//                 totalOrders,
+//                 hasNextPage: skip + limit < totalOrders,
+//                 hasPrevPage: page > 1
+//             },
+//             filters: {
+//                 status: req.query.status || 'all',
+//                 paymentStatus: req.query.paymentStatus || 'all',
+//                 paymentMethod: req.query.paymentMethod || 'all',
+//                 dateRange: {
+//                     start: req.query.startDate,
+//                     end: req.query.endDate
+//                 }
+//             }
+//         });
+
+//     } catch (error) {
+//         console.error('Error in getAllOrders:', error);
+//         res.status(500).json({
+//             success: false,
+//             message: 'Error fetching orders',
+//             error: error.message
+//         });
+//     }
+// };
+
+// Add a new route to get filter options
 export const getAllOrders = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = 10; // 10 orders per page
+        const limit = 10;
         const skip = (page - 1) * limit;
 
-        // Build filter query
         let filterQuery = {};
 
-        // Order status filter
         if (req.query.status) {
             filterQuery.orderStatus = req.query.status;
         }
 
-        // Payment status filter
         if (req.query.paymentStatus) {
             filterQuery.paymentStatus = req.query.paymentStatus;
         }
 
-        // Payment method filter
         if (req.query.paymentMethod) {
             filterQuery.paymentMethod = req.query.paymentMethod;
         }
 
-        // Date range filter
         if (req.query.startDate && req.query.endDate) {
             filterQuery.createdAt = {
                 $gte: new Date(req.query.startDate),
@@ -426,17 +502,20 @@ export const getAllOrders = async (req, res) => {
             };
         }
 
-        // Get total count for pagination
         const totalOrders = await Order.countDocuments(filterQuery);
 
-        // Fetch filtered orders
         const orders = await Order.find(filterQuery)
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit)
             .populate({
                 path: 'items.product',
-                select: 'name price category farmer_details'
+                select: 'name price category'
+            })
+            .populate({
+                path: 'items.farmer_id',
+                select: 'name email location',
+                model: 'User'
             })
             .populate({
                 path: 'user',
@@ -473,8 +552,6 @@ export const getAllOrders = async (req, res) => {
         });
     }
 };
-
-// Add a new route to get filter options
 export const getOrderFilters = async (req, res) => {
     try {
         const orderStatuses = ['processing', 'shipped', 'delivered'];

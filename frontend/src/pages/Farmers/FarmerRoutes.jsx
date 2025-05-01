@@ -8,6 +8,7 @@ import EditProduct from './EditProduct';
 // import OrderList from './OrderList';
 import Profile from '../Profile';
 import FarmerOrders from './Farmerorder';
+import Analytics from './Analytics';
 
 const FarmerRoutes = () => {
     return (
@@ -19,6 +20,7 @@ const FarmerRoutes = () => {
             <Route path="/update/:productId" element={<EditProduct />} />
             {/* <Route path="/orders" element={<OrderList />} /> */}
             <Route path="/orders" element={<FarmerOrders />} />
+            <Route path="analytics" element={<Analytics />} />
             {/* Add more routes as needed */}   
         </Routes>
     );

@@ -7,22 +7,13 @@ import {
   Package,
   ShoppingCart,
   TrendingUp,
-  Calendar,
-  ArrowUpRight,
-  ArrowDownRight,
   Clock,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function FarmerDashboard() {
-  const [stats] = useState({
-    totalProducts: 156,
-    pendingOrders: 23,
-  });
-
   const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -116,38 +107,6 @@ function FarmerDashboard() {
                 </p>
               </motion.button>
             </div>
-          </div>
-
-          {/* Stats Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-green-200/20 dark:border-teal-800/20"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <Package className="w-5 h-5 text-green-600 dark:text-teal-400" />
-                <span className="text-gray-600 dark:text-gray-300">Total Products</span>
-              </div>
-              <p className="text-2xl font-bold text-green-900 dark:text-teal-50">
-                {stats.totalProducts}
-              </p>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-green-200/20 dark:border-teal-800/20"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <ShoppingCart className="w-5 h-5 text-green-600 dark:text-teal-400" />
-                <span className="text-gray-600 dark:text-gray-300">Pending Orders</span>
-              </div>
-              <p className="text-2xl font-bold text-green-900 dark:text-teal-50">
-                {stats.pendingOrders}
-              </p>
-            </motion.div>
           </div>
 
           {/* Recent Orders */}

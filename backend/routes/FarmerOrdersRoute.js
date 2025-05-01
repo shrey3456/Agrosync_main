@@ -15,4 +15,8 @@ router.get('/recent', authenticate, orderController.getRecentOrders);
 // Get order details for a specific order
 router.get('/orders/:orderId', authenticate, orderController.getOrderDetails);
 
+router.get('/stats', authenticate, orderController.getFarmerStats);
+
+
+
 export { router as FarmerOrdersRoutes };
