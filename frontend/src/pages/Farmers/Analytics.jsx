@@ -36,17 +36,18 @@ function Analytics() {
     totalOrders: 0,
     pendingOrders: 0,
     totalRevenue: 0,
-    topProducts: [],
-    monthlyRevenue: [],
-    ordersByStatus: {},
-    monthlySales: []
+    orderDistribution: {},
+    monthlyData: [],
+    topProducts: []
   });
   const [loading, setLoading] = useState(true);
+  const [timeFrame, setTimeFrame] = useState('monthly');
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem('token');
+        console.log('Fetching farmer stats...');
         const response = await axios.get('http://localhost:5000/api/farmer/stats', {
           headers: {
             Authorization: `Bearer ${token}`
@@ -54,6 +55,17 @@ function Analytics() {
         });
 
         if (response.data.success) {
+          // Log received data for debugging
+          console.log('Stats Data:', {
+            totalProducts: response.data.stats.totalProducts,
+            totalOrders: response.data.stats.totalOrders,
+            pendingOrders: response.data.stats.pendingOrders,
+            totalRevenue: response.data.stats.totalRevenue,
+            orderDistribution: response.data.stats.orderDistribution,
+            monthlyData: response.data.stats.monthlyData,
+            topProducts: response.data.stats.topProducts
+          });
+
           setStats(response.data.stats);
         }
       } catch (error) {
@@ -65,6 +77,26 @@ function Analytics() {
 
     fetchStats();
   }, []);
+
+  const formatSalesData = () => {
+    if (!stats.monthlyData?.length) return [];
+    
+    if (timeFrame === 'yearly') {
+      return stats.monthlyData.reduce((acc, data) => {
+        const year = data.period.split(' ')[1];
+        const existingYear = acc.find(item => item.period === year);
+        
+        if (existingYear) {
+          existingYear.orders += data.orders;
+        } else {
+          acc.push({ period: year, orders: data.orders });
+        }
+        return acc;
+      }, []).sort((a, b) => a.period - b.period);
+    }
+    
+    return stats.monthlyData;
+  };
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -110,15 +142,14 @@ function Analytics() {
   );
 
   // Prepare chart data with null checks
-  const orderStatusData = stats.ordersByStatus ? 
-    Object.entries(stats.ordersByStatus).map(([key, value]) => ({
-      name: key,
-      value: value
+  const orderStatusData = stats.orderDistribution ? 
+    Object.entries(stats.orderDistribution).map(([status, data]) => ({
+      name: status,
+      value: data.count,
+      percentage: data.percentage
     })) : [];
 
   const topProductsData = stats.topProducts || [];
-  const monthlyRevenueData = stats.monthlyRevenue || [];
-  const monthlySalesData = stats.monthlySales || [];
 
   if (loading) {
     return (
@@ -258,18 +289,42 @@ function Analytics() {
             </motion.div>
           </div>
 
-          {/* Monthly Revenue Chart */}
+          {/* Sales Trend Chart */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-teal-800/20 mb-8"
           >
-            <h3 className="text-xl font-bold text-teal-50 mb-6">Revenue Trend</h3>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-teal-50">Sales Trend</h3>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setTimeFrame('monthly')}
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    timeFrame === 'monthly'
+                      ? 'bg-teal-500 text-black'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  Monthly
+                </button>
+                <button
+                  onClick={() => setTimeFrame('yearly')}
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    timeFrame === 'yearly'
+                      ? 'bg-teal-500 text-black'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  Yearly
+                </button>
+              </div>
+            </div>
             <div className="h-[400px]">
               <ResponsiveContainer width="100%" height="100%">
-                {monthlyRevenueData.length > 0 ? (
-                  <LineChart data={monthlyRevenueData}>
+                {formatSalesData().length > 0 ? (
+                  <LineChart data={formatSalesData()}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                     <XAxis 
                       dataKey="period" 
@@ -283,7 +338,7 @@ function Analytics() {
                     <Tooltip content={<CustomTooltip />} />
                     <Line 
                       type="monotone" 
-                      dataKey="revenue" 
+                      dataKey="orders" 
                       stroke="#2DD4BF" 
                       strokeWidth={3}
                       dot={{ fill: '#2DD4BF', strokeWidth: 2 }}
@@ -294,44 +349,6 @@ function Analytics() {
                       }}
                     />
                   </LineChart>
-                ) : (
-                  <div className="h-full flex items-center justify-center text-gray-400">
-                    No revenue data available
-                  </div>
-                )}
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
-
-          {/* Monthly Sales Chart */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-teal-800/20"
-          >
-            <h3 className="text-xl font-bold text-teal-50 mb-6">Monthly Sales</h3>
-            <div className="h-[400px]">
-              <ResponsiveContainer width="100%" height="100%">
-                {monthlySalesData.length > 0 ? (
-                  <BarChart data={monthlySalesData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis 
-                      dataKey="period" 
-                      stroke="#9CA3AF"
-                      tick={{ fill: '#9CA3AF' }}
-                    />
-                    <YAxis 
-                      stroke="#9CA3AF"
-                      tick={{ fill: '#9CA3AF' }}
-                    />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Bar 
-                      dataKey="orders" 
-                      fill="#2DD4BF"
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
                 ) : (
                   <div className="h-full flex items-center justify-center text-gray-400">
                     No sales data available

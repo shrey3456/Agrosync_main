@@ -998,13 +998,13 @@ export const getFarmerStats = async (req, res) => {
   try {
     const farmer_id = req.user.id;
 
-    // Get total products count
+    // Get total products
     const totalProducts = await Product.countDocuments({ farmer_id });
 
     // Get orders for this farmer
     const orders = await Order.find({ 
       'items.farmer_id': farmer_id 
-    });
+    }).sort({ createdAt: -1 });
 
     // Calculate total and pending orders
     const totalOrders = orders.length;
@@ -1023,25 +1023,7 @@ export const getFarmerStats = async (req, res) => {
       return total + orderTotal;
     }, 0);
 
-    // Get monthly revenue data (last 6 months)
-    const monthlyRevenue = {};
-    const last6Months = new Date();
-    last6Months.setMonth(last6Months.getMonth() - 6);
-
-    orders.forEach(order => {
-      if (new Date(order.createdAt) >= last6Months) {
-        const month = new Date(order.createdAt).toLocaleString('default', { month: 'long' });
-        const farmerItems = order.items.filter(item => 
-          item.farmer_id?.toString() === farmer_id
-        );
-        const orderTotal = farmerItems.reduce((sum, item) => 
-          sum + (item.price * item.quantity), 0
-        );
-        monthlyRevenue[month] = (monthlyRevenue[month] || 0) + orderTotal;
-      }
-    });
-
-    // Get order status distribution
+    // Calculate order status distribution
     const orderStatusCount = {
       created: 0,
       processing: 0,
@@ -1055,30 +1037,83 @@ export const getFarmerStats = async (req, res) => {
         orderStatusCount[order.orderStatus]++;
       }
     });
+    console.log('Order status count:', orderStatusCount);
 
-    // Get top selling products
+    // Get sales data by month (last 6 months)
+    const monthlySales = {};
+    const monthlyRevenue = {};
+    const last6Months = new Date();
+    last6Months.setMonth(last6Months.getMonth() - 6);
+
+    orders.forEach(order => {
+      if (new Date(order.createdAt) >= last6Months) {
+        const month = new Date(order.createdAt).toLocaleString('default', { month: 'long' });
+        
+        // Count orders per month
+        monthlySales[month] = (monthlySales[month] || 0) + 1;
+        
+        // Calculate revenue per month
+        const farmerItems = order.items.filter(item => 
+          item.farmer_id?.toString() === farmer_id
+        );
+        const orderTotal = farmerItems.reduce((sum, item) => 
+          sum + (item.price * item.quantity), 0
+        );
+        monthlyRevenue[month] = (monthlyRevenue[month] || 0) + orderTotal;
+      }
+    });
+
+    // Get top selling products with revenue
     const productSales = {};
     orders.forEach(order => {
       order.items.forEach(item => {
         if (item.farmer_id?.toString() === farmer_id) {
           if (!productSales[item.name]) {
-            productSales[item.name] = 0;
+            productSales[item.name] = {
+              quantity: 0,
+              revenue: 0
+            };
           }
-          productSales[item.name] += item.quantity;
+          productSales[item.name].quantity += item.quantity;
+          productSales[item.name].revenue += (item.price * item.quantity);
         }
       });
     });
 
     const topProducts = Object.entries(productSales)
-      .map(([name, quantity]) => ({ name, quantity }))
+      .map(([name, stats]) => ({
+        name,
+        quantity: stats.quantity,
+        revenue: stats.revenue
+      }))
       .sort((a, b) => b.quantity - a.quantity)
       .slice(0, 5);
 
-    // Get monthly orders count
-    const monthlySales = {};
-    orders.forEach(order => {
-      const month = new Date(order.createdAt).toLocaleString('default', { month: 'long' });
-      monthlySales[month] = (monthlySales[month] || 0) + 1;
+    // Convert monthly data to arrays for charts
+    const monthlyData = Object.entries(monthlyRevenue).map(([period, revenue]) => ({
+      period,
+      revenue,
+      orders: monthlySales[period] || 0
+    }));
+
+    // Calculate order distribution percentages
+    const totalOrdersCount = Object.values(orderStatusCount).reduce((a, b) => a + b, 0);
+    const orderDistribution = {};
+    Object.entries(orderStatusCount).forEach(([status, count]) => {
+      orderDistribution[status] = {
+        count,
+        percentage: totalOrdersCount ? ((count / totalOrdersCount) * 100).toFixed(1) : 0
+      };
+    });
+
+    console.log('Generated farmer stats:', {
+      totalProducts,
+      totalOrders,
+      pendingOrders,
+      totalRevenue,
+      orderDistribution,
+      monthlyData,
+      topProducts
     });
 
     res.json({
@@ -1088,10 +1123,9 @@ export const getFarmerStats = async (req, res) => {
         totalOrders,
         pendingOrders,
         totalRevenue,
-        monthlyRevenue,
-        orderStatusCount,
-        topProducts,
-        monthlySales
+        orderDistribution,
+        monthlyData,
+        topProducts
       }
     });
 
