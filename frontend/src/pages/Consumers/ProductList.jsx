@@ -75,24 +75,16 @@ function ProductList() {
   const handlePricePrediction = async (product, e) => {
     if (e) e.stopPropagation();
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://localhost:5000/api/prediction/price?productName=${encodeURIComponent(product.name)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = await response.json();
-      if (response.ok && data.predictedPrice) {
-        alert(`Predicted price for ${product.name} is ₹${data.predictedPrice}`);
-      } else {
-        alert("Price prediction unavailable");
-      }
+      // Navigate to PricePredictionTester page with product name as state
+      navigate('/consumer/price-prediction', {
+        state: { productName: product.name }
+      });
     } catch (err) {
-      console.error("Error in price prediction:", err);
-      alert("Error fetching price prediction");
+      console.error('Error in price prediction:', err);
+      setCartMessage({
+        type: 'info',
+        text: 'Unable to access price prediction at this time'
+      });
     }
   };
 

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaFilter, FaArrowLeft, FaTruck, FaCheck, FaBoxOpen } from 'react-icons/fa';
-import { io } from 'socket.io-client';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const OrderManagement = () => {
@@ -21,7 +20,7 @@ const OrderManagement = () => {
         totalPages: 1,
         totalOrders: 0
     });
-    const [socket, setSocket] = useState(null);
+   
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,61 +30,16 @@ const OrderManagement = () => {
     useEffect(() => {
         const debounceTimer = setTimeout(() => {
             fetchOrders(1);
-        }, 300); // 300ms delay to prevent too many requests
+        }, 300);
 
         return () => clearTimeout(debounceTimer);
-    }, [filters]); // This will trigger whenever filters change
-
-    useEffect(() => {
-        const newSocket = io(API_BASE_URL, {
-            transports: ['websocket'],
-            reconnection: true
-        });
-        setSocket(newSocket);
-
-        // Enhanced socket event listener with logging
-        newSocket.on('orderStatusUpdate', (data) => {
-            console.log('Received order status update:', data);
-            setOrders(prevOrders =>
-                prevOrders.map(order =>
-                    order._id === data.orderId
-                        ? {
-                            ...order,
-                            orderStatus: data.newStatus,
-                            updatedAt: data.updatedAt || new Date().toISOString()
-                        }
-                        : order
-                )
-            );
-        });
-
-        // Add connection status handlers
-        newSocket.on('connect', () => {
-            console.log('Socket connected successfully');
-        });
-
-        newSocket.on('disconnect', () => {
-            console.log('Socket disconnected');
-        });
-
-        newSocket.on('connect_error', (error) => {
-            console.error('Socket connection error:', error);
-        });
-
-        return () => {
-            if (newSocket) {
-                console.log('Cleaning up socket connection...');
-                newSocket.disconnect();
-            }
-        };
-    }, []);
+    }, [filters]);
 
     const fetchOrders = async (page = 1) => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
 
-            // Build query string from filters
             const queryParams = new URLSearchParams({
                 page,
                 ...Object.fromEntries(
@@ -115,9 +69,9 @@ const OrderManagement = () => {
     const updateOrderStatus = async (orderId, status) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.put(
+            const response = await axios.put(
                 `${API_BASE_URL}/api/admin/orders/${orderId}/status`,
-                { status },
+                { status }, // Just send status, not orderStatus
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -125,10 +79,46 @@ const OrderManagement = () => {
                     }
                 }
             );
-            // The UI will be updated automatically through the socket event
+            
+            if (response.data.success) {
+                // Update the order status in the local state
+                setOrders(prevOrders =>
+                    prevOrders.map(order =>
+                        order._id === orderId
+                            ? {
+                                ...order,
+                                orderStatus: status,
+                                updatedAt: new Date().toISOString()
+                            }
+                            : order
+                    )
+                );
+
+                // Show success notification 
+                alert('Order status updated successfully');
+
+                // Refresh orders to get latest data
+                fetchOrders(pagination.currentPage);
+            } else {
+                throw new Error(response.data.message || 'Failed to update status');
+            }
         } catch (error) {
             console.error('Error updating order status:', error);
-            // Optionally show an error notification here
+            alert(error.response?.data?.message || 'Failed to update order status. Please try again.');
+        }
+    };
+
+    const handleStatusUpdate = async (orderId, newStatus) => {
+        if (!orderId || !newStatus) {
+            alert('Invalid order or status');
+            return;
+        }
+
+        try {
+            await updateOrderStatus(orderId, newStatus);
+        } catch (error) {
+            console.error('Failed to update status:', error);
+            alert('Failed to update status. Please try again.');
         }
     };
 
@@ -205,7 +195,6 @@ const OrderManagement = () => {
         const [isUpdating, setIsUpdating] = useState(false);
 
         const handleStatusUpdate = async (orderId, newStatus) => {
-            // Check if order is cancelled
             if (order.orderStatus === 'cancelled') {
                 alert('Cannot update status of cancelled orders');
                 return;
@@ -315,14 +304,13 @@ const OrderManagement = () => {
                         <div>
                             <p className="text-white">{item.name}</p>
                             <p className="text-sm text-gray-400">
-                                {/* Farmer: {order.farmerDetails?.name || order.farmer_details?.name || order.user?.name || 'N/A'} */}
                                 Farmer: {item.farmer_id?.name || 'N/A'}
                                 {console.log('Order details:', order)}
                             </p>
                         </div>
                         <div className="text-right">
-                            <p className="text-white">{item.quantity} x ₹{item.price}</p>
-                            <p className="text-teal-500">₹{item.quantity * item.price}</p>
+                            <p className="text-white">{item.quantity} x ₹{item.price.toFixed(2)}</p>
+                            <p className="text-teal-500">₹{item.quantity * item.price.toFixed(2)}</p>
                         </div>
                     </div>
                 ))}

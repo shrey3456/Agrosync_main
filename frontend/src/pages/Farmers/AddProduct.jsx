@@ -34,6 +34,9 @@ function AddProduct() {
     }
   });
 
+  // Get current date in YYYY-MM-DD format for max date validation
+  const today = new Date().toISOString().split('T')[0];
+
   // Get user data from localStorage on component mount
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user'));
@@ -55,9 +58,19 @@ function AddProduct() {
     }));
   }, [navigate]);
 
-  // Handle input changes
+  // Handle input changes with date validation
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    if (name === 'traceability.harvest_date') {
+      const selectedDate = new Date(value);
+      const currentDate = new Date();
+      
+      if (selectedDate > currentDate) {
+        toast.error('Harvest date cannot be in the future');
+        return;
+      }
+    }
     
     if (name.startsWith('traceability.')) {
       const field = name.split('.')[1];
@@ -378,8 +391,12 @@ function AddProduct() {
                     name="traceability.harvest_date"
                     value={formData.traceability.harvest_date}
                     onChange={handleInputChange}
+                    max={today}
                     className="w-full bg-[#1a332e] text-white px-4 py-2.5 rounded-lg border border-teal-500/20 focus:outline-none focus:border-teal-500"
                   />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Cannot select future dates
+                  </p>
                 </div>
               </div>
             </div>

@@ -420,7 +420,7 @@ const TrackOrders = () => {
           <div className="flex justify-between items-center">
             <div className="text-teal-50">
               <p>Total Amount:</p>
-              <p className="text-xl font-semibold">₹{order.totalAmount}</p>
+              <p className="text-xl font-semibold">₹{order.totalAmount.toFixed(2)}</p>
             </div>
             {showCancelButton && order.orderStatus !== 'delivered' && (
               <button

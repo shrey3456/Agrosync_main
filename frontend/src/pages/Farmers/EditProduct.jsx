@@ -477,10 +477,14 @@ function EditProduct() {
                   <input
                     type="date"
                     name="traceability.harvest_date"
-                    value={formData.traceability.harvest_date}
-                    onChange={handleInputChange}
-                    className="w-full bg-[#1a332e] text-white px-4 py-2.5 rounded-lg border border-teal-500/20 focus:outline-none focus:border-teal-500"
+                    value={formData.traceability.harvest_date || ''}
+                    className="w-full bg-[#1a332e] text-white px-4 py-2.5 rounded-lg border border-teal-500/20 cursor-not-allowed opacity-75"
+                    readOnly
+                    disabled
                   />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Harvest date cannot be modified after product creation
+                  </p>
                 </div>
               </div>
             </div>

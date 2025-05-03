@@ -12,6 +12,7 @@ import {adminRoutes} from './routes/adminRoutes.js';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import notificationRoutes from './routes/notificationRoutes.js';
+import {predictsRoutes} from './routes/commodityRoutes.js'
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.use('/api/users', ProfileRoutes);
 app.use('/api/farmer', FarmerOrdersRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api', predictsRoutes);
 // Connect MongoDB
 connectMongoDB();
 

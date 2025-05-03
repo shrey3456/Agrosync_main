@@ -332,14 +332,56 @@ function ProductList() {
   }
 
   if (error && !isNewUser) {
+    const isDistanceError = error.includes('distance') || error.includes('exceeds limit');
+    if (isDistanceError) {
+      return (
+        <div className="min-h-screen bg-gradient-to-b from-[#0c1816] to-[#0b1f1a]">
+          <Navbar />
+          <div className="pt-24 px-6">
+            <div className="max-w-7xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center mb-12"
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="inline-block p-3 rounded-full bg-red-500/10 mb-6"
+                >
+                  <Info className="w-10 h-10 text-red-400" />
+                </motion.div>
+                <h1 className="font-serif text-4xl font-bold tracking-tighter text-red-50 mb-4">
+                  Product Not Available
+                </h1>
+                <p className="text-gray-300 max-w-2xl mx-auto mb-8">
+                  This product is not available in your area as the farmer is located too far from your location. 
+                  Please check products from farmers closer to you.
+                </p>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate(-1)}
+                  className="bg-red-500 text-white px-8 py-3 rounded-lg flex items-center space-x-2 hover:bg-red-600 transition-colors mx-auto"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                  <span>Go Back</span>
+                </motion.button>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    alert(`Error: ${error}`);
+    setError(null); // Clear the error after showing alert
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#0c1816] to-[#0b1f1a]">
         <Navbar />
         <div className="pt-24 px-6">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center text-red-500">
-              <p>Error: {error}</p>
-            </div>
+            {/* Rest of the content */}
           </div>
         </div>
       </div>

@@ -11,6 +11,7 @@ import OrderConfirmationPage from "./OrderConform";
 import Profile from '../Profile';
 import TrackOrders from "./TrackOrders";
 import Analytics from "./Analytics";
+import PricePredictionTester from "./PricePredictionTester";
 function ConsumerRoutes() {
   return (
     <Routes>
@@ -25,6 +26,7 @@ function ConsumerRoutes() {
         <Route path="order-confirmation" element={<OrderConfirmationPage />} /> 
         <Route path="track-orders" element={<TrackOrders />} />
         <Route path="analytics" element={<Analytics />} />
+        <Route path="price-prediction" element={<PricePredictionTester />} />
       </Route>
     </Routes>
   );

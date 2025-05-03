@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { FiUsers, FiShoppingBag, FiTruck, FiBarChart2, FiDollarSign, FiPackage, 
-         FiActivity, FiCheckCircle, FiArrowRight } from 'react-icons/fi';
+import {
+    FiUsers, FiShoppingBag, FiTruck, FiBarChart2, FiDollarSign, FiPackage,
+    FiActivity, FiCheckCircle, FiArrowRight
+} from 'react-icons/fi';
 import { FaUsers } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -27,7 +29,7 @@ const AdminDashboard = () => {
     const checkAdminAuth = () => {
         const token = localStorage.getItem('token');
         const user = JSON.parse(localStorage.getItem('user'));
-        
+
         if (!token || !user || user.role !== 'admin') {
             navigate('/login');
             return false;
@@ -82,7 +84,7 @@ const AdminDashboard = () => {
     };
 
     const StatsCard = ({ title, value, icon, onClick }) => (
-        <div 
+        <div
             className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-green-200/20 dark:border-teal-800/20 hover:border-green-300/30 dark:hover:border-teal-700/30 transition-colors cursor-pointer"
             onClick={onClick}
         >
@@ -147,6 +149,7 @@ const AdminDashboard = () => {
                         title="Total Consumers"
                         value={stats.totalConsumers}
                         icon={<FiUsers className="text-teal-500" size={24} />}
+                        onClick={() => navigate('/admin/consumers')}
                     />
                     <StatsCard
                         title="Total Products"
@@ -155,12 +158,12 @@ const AdminDashboard = () => {
                     />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div className="grid grid-cols-1 gap-6 mb-8">
                     <motion.button
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         onClick={() => navigate('/admin/orders')}
-                        className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-green-200/20 dark:border-teal-800/20 hover:border-green-300/30 dark:hover:border-teal-700/30 transition-colors"
+                        className="md:col-span-2 bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-green-200/20 dark:border-teal-800/20 hover:border-green-300/30 dark:hover:border-teal-700/30 transition-colors w-full"
                     >
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -173,27 +176,9 @@ const AdminDashboard = () => {
                             <FiArrowRight className="w-6 h-6 text-gray-400" />
                         </div>
                     </motion.button>
-
-                    <motion.button
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        onClick={() => navigate('/admin/analytics')}
-                        className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-green-200/20 dark:border-teal-800/20 hover:border-green-300/30 dark:hover:border-teal-700/30 transition-colors"
-                    >
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <FiBarChart2 className="w-6 h-6 text-purple-500" />
-                                <div className="text-left">
-                                    <span className="block text-xl font-semibold text-white">View Analytics</span>
-                                    <span className="text-gray-400">Detailed performance metrics</span>
-                                </div>
-                            </div>
-                            <FiArrowRight className="w-6 h-6 text-gray-400" />
-                        </div>
-                    </motion.button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -201,7 +186,7 @@ const AdminDashboard = () => {
                     >
                         <h2 className="text-xl font-semibold text-teal-50 mb-6">Order Statistics</h2>
                         <div className="space-y-4">
-                            <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-green-200/10 dark:border-teal-800/10">
+                            <div className="flex items-center justify-between p-4 bg-white/10 rounded-lg shadow-md">
                                 <div className="flex items-center gap-3">
                                     <FiTruck className="text-yellow-500" size={20} />
                                     <div>
@@ -211,7 +196,7 @@ const AdminDashboard = () => {
                                 </div>
                                 <span className="text-xl font-semibold text-white">{stats.activeOrders}</span>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-green-200/10 dark:border-teal-800/10">
+                            <div className="flex items-center justify-between p-4 bg-white/10 rounded-lg shadow-md">
                                 <div className="flex items-center gap-3">
                                     <FiCheckCircle className="text-green-500" size={20} />
                                     <div>
@@ -229,19 +214,9 @@ const AdminDashboard = () => {
                         animate={{ opacity: 1, y: 0 }}
                         className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-green-200/20 dark:border-teal-800/20"
                     >
-                        <h2 className="text-xl font-semibold text-teal-50 mb-6">Order Analytics</h2>
+                        <h2 className="text-2xl font-bold text-teal-50 mb-4">Order Analytics</h2>
                         <div className="space-y-4">
-                            <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-green-200/10 dark:border-teal-800/10">
-                                <div className="flex items-center gap-3">
-                                    <FiDollarSign className="text-teal-500" size={20} />
-                                    <div>
-                                        <p className="text-white">Total Revenue</p>
-                                        <p className="text-sm text-gray-400">All time earnings</p>
-                                    </div>
-                                </div>
-                                <span className="text-xl font-semibold text-white">₹{stats.totalRevenue || 0}</span>
-                            </div>
-                            <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-green-200/10 dark:border-teal-800/10">
+                            <div className="flex items-center justify-between p-4 bg-white/10 rounded-lg shadow-md">
                                 <div className="flex items-center gap-3">
                                     <FiActivity className="text-purple-500" size={20} />
                                     <div>

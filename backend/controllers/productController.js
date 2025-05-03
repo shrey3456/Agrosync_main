@@ -160,6 +160,7 @@ export const addProduct = async (req, res) => {
       if (key.startsWith("traceability[")) {
         const fieldName = key.replace("traceability[", "").replace("]", "");
         traceability[fieldName] = req.body[key];
+        traceability[fieldName] === '' // Replace single quotes with double quotes
         console.log("Extracted traceability field:", fieldName, req.body[key]);
       }
     });

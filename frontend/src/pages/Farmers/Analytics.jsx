@@ -80,12 +80,12 @@ function Analytics() {
 
   const formatSalesData = () => {
     if (!stats.monthlyData?.length) return [];
-    
+
     if (timeFrame === 'yearly') {
       return stats.monthlyData.reduce((acc, data) => {
         const year = data.period.split(' ')[1];
         const existingYear = acc.find(item => item.period === year);
-        
+
         if (existingYear) {
           existingYear.orders += data.orders;
         } else {
@@ -94,7 +94,7 @@ function Analytics() {
         return acc;
       }, []).sort((a, b) => a.period - b.period);
     }
-    
+
     return stats.monthlyData;
   };
 
@@ -107,9 +107,9 @@ function Analytics() {
             {data.name || data.period}
           </p>
           <p className="text-lg font-semibold text-teal-400">
-            {data.quantity ? 
-              `Quantity: ${data.quantity}` : 
-              data.revenue ? 
+            {data.quantity ?
+              `Quantity: ${data.quantity}` :
+              data.revenue ?
                 `Revenue: ₹${data.revenue.toLocaleString('en-IN')}` :
                 `Orders: ${data.value || data.orders}`
             }
@@ -142,12 +142,14 @@ function Analytics() {
   );
 
   // Prepare chart data with null checks
-  const orderStatusData = stats.orderDistribution ? 
-    Object.entries(stats.orderDistribution).map(([status, data]) => ({
-      name: status,
-      value: data.count,
-      percentage: data.percentage
-    })) : [];
+  const orderStatusData = stats.orderDistribution ?
+    Object.entries(stats.orderDistribution)
+      .filter(([status, data]) => data.count > 0)
+      .map(([status, data]) => ({
+        name: status,
+        value: data.count,
+        percentage: data.percentage
+      })) : [];
 
   const topProductsData = stats.topProducts || [];
 
@@ -189,22 +191,22 @@ function Analytics() {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <StatCard 
+            <StatCard
               icon={Package}
               label="Total Products"
               value={stats.totalProducts}
             />
-            <StatCard 
+            <StatCard
               icon={ShoppingCart}
               label="Total Orders"
               value={stats.totalOrders}
             />
-            <StatCard 
+            <StatCard
               icon={Clock}
               label="Pending Orders"
               value={stats.pendingOrders}
             />
-            <StatCard 
+            <StatCard
               icon={DollarSign}
               label="Total Revenue"
               value={`₹${stats.totalRevenue?.toFixed(2) || '0.00'}`}
@@ -301,21 +303,19 @@ function Analytics() {
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setTimeFrame('monthly')}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
-                    timeFrame === 'monthly'
+                  className={`px-4 py-2 rounded-lg transition-colors ${timeFrame === 'monthly'
                       ? 'bg-teal-500 text-black'
                       : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                  }`}
+                    }`}
                 >
                   Monthly
                 </button>
                 <button
                   onClick={() => setTimeFrame('yearly')}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
-                    timeFrame === 'yearly'
+                  className={`px-4 py-2 rounded-lg transition-colors ${timeFrame === 'yearly'
                       ? 'bg-teal-500 text-black'
                       : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                  }`}
+                    }`}
                 >
                   Yearly
                 </button>
@@ -326,25 +326,25 @@ function Analytics() {
                 {formatSalesData().length > 0 ? (
                   <LineChart data={formatSalesData()}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis 
-                      dataKey="period" 
+                    <XAxis
+                      dataKey="period"
                       stroke="#9CA3AF"
                       tick={{ fill: '#9CA3AF' }}
                     />
-                    <YAxis 
+                    <YAxis
                       stroke="#9CA3AF"
                       tick={{ fill: '#9CA3AF' }}
                     />
                     <Tooltip content={<CustomTooltip />} />
-                    <Line 
-                      type="monotone" 
-                      dataKey="orders" 
-                      stroke="#2DD4BF" 
+                    <Line
+                      type="monotone"
+                      dataKey="orders"
+                      stroke="#2DD4BF"
                       strokeWidth={3}
                       dot={{ fill: '#2DD4BF', strokeWidth: 2 }}
-                      activeDot={{ 
-                        r: 8, 
-                        fill: '#2DD4BF', 
+                      activeDot={{
+                        r: 8,
+                        fill: '#2DD4BF',
                         stroke: '#fff'
                       }}
                     />
