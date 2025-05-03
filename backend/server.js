@@ -21,7 +21,7 @@ const httpServer = createServer(app);
 
 // Update CORS configuration
 app.use(cors({
-  origin: "*", // Your frontend URL
+  origin: "https://agro-sync.netlify.app", // Your frontend URL
   credentials: true
 }));
 
