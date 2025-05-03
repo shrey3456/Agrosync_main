@@ -16,6 +16,8 @@ const RegisterPage = () => {
   const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
 
+  const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
+
   // Validate Email Format
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -88,7 +90,7 @@ const RegisterPage = () => {
 
       console.log(`Attempting Google Sign-In for ${email}`);
 
-      const res = await fetch("http://localhost:5000/api/auth/google", {
+      const res = await fetch("${API_BASE_URL}/api/auth/google", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

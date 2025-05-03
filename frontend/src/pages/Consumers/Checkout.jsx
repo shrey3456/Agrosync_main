@@ -43,8 +43,7 @@ const CheckoutPage = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   // API URL - Using Vite environment variables
-  const API_BASE_URL =
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+  const API_BASE_URL =import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
   // Load checkout data from localStorage
   useEffect(() => {

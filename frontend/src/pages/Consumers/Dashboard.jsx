@@ -31,7 +31,7 @@ const ConsumerDashboard = () => {
 
   // Set axios configuration
   useEffect(() => {
-    axios.defaults.baseURL = "http://localhost:5000";
+    axios.defaults.baseURL =import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";;
     // Add auth token if available
     const token = localStorage.getItem("token");
     if (token) {

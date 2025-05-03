@@ -12,6 +12,9 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
+
+
 // Add improved debugging to the formatDate function
 const formatDate = (dateString) => {
   console.log("Formatting date:", dateString, typeof dateString);
@@ -105,7 +108,7 @@ function ProductList() {
   const fetchAllProducts = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/products/consumer/allproducts"
+        `${API_BASE_URL}/api/products/consumer/allproducts`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch products");
@@ -159,7 +162,7 @@ function ProductList() {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/products/farmers/${encodeURIComponent(productName)}?pincode=${pincode}`,
+        `${API_BASE_URL}/api/products/farmers/${encodeURIComponent(productName)}?pincode=${pincode}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -410,7 +413,7 @@ function ProductList() {
                 <div className="md:w-1/3">
                   {selectedProduct.image_url && (
                     <img
-                      src={`http://localhost:5000${selectedProduct.image_url}`}
+                      src={`${API_BASE_URL}${selectedProduct.image_url}`}
                       alt={selectedProduct.name}
                       className="w-full h-auto rounded-xl"
                     />
@@ -698,7 +701,7 @@ function ProductList() {
                   <div className="relative">
                     {product.image_url && (
                       <img
-                        src={`http://localhost:5000${product.image_url}`}
+                        src={`${API_BASE_URL}${product.image_url}`}
                         alt={product.name}
                         className="w-full h-48 object-cover"
                       />

@@ -15,14 +15,14 @@ function PricePredictionTester() {
   const [loadingCommodities, setLoadingCommodities] = useState(true);
 
   const location = useLocation();
-  
+  const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
 
   // Fetch available commodities on component mount
   useEffect(() => {
     const fetchCommodities = async () => {
       try {
         setLoadingCommodities(true);
-        const response = await axios.get('http://localhost:5000/api/commodities');
+        const response = await axios.get(`${API_BASE_URL}/api/commodities`);
         if (response.data.commodities) {
           setCommodities(response.data.commodities);
         }
@@ -51,7 +51,7 @@ function PricePredictionTester() {
     setPrediction(null);
     
     try {
-      const response = await axios.get(`http://localhost:5000/api/predict/${selectedCommodity}?days=${days}`);
+      const response = await axios.get(`${API_BASE_URL}/api/predict/${selectedCommodity}?days=${days}`);
       
       if (response.data.success) {
         setPrediction(response.data.predictions);

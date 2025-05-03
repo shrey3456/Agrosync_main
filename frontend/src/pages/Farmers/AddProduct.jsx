@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast';
 function AddProduct() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
   
   // State for farmer data
   const [farmer, setFarmer] = useState({
@@ -152,7 +153,7 @@ function AddProduct() {
       submitFormData.append('image', formData.image);
 
       // Make API request
-      const response = await fetch('http://localhost:5000/api/products/add-product', {
+      const response = await fetch(`${API_BASE_URL}/api/products/add-product`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

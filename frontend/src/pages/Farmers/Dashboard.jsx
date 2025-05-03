@@ -10,7 +10,7 @@ import {
   Clock,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
 function FarmerDashboard() {
   const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +20,7 @@ function FarmerDashboard() {
     const fetchRecentOrders = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/orders/recent', {
+        const response = await axios.get(`${API_BASE_URL}/api/orders/recent`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

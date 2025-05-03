@@ -32,6 +32,8 @@ const TrackOrders = () => {
     { value: 'year', label: 'This Year' }
   ];
 
+  const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
+
   useEffect(() => {
     fetchOrders(currentPage);
   }, [currentPage]);
@@ -79,7 +81,7 @@ const TrackOrders = () => {
       const token = localStorage.getItem('token');
       console.log('Fetching orders for page:', page);
       
-      const response = await axios.get(`/api/orders/my-orders?page=${page}&limit=5`, {
+      const response = await axios.get(`${API_BASE_URL}/api/orders/my-orders?page=${page}&limit=5`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -109,7 +111,7 @@ const TrackOrders = () => {
     try {
       console.log('Attempting to cancel order:', orderId);
       const token = localStorage.getItem('token');
-      const response = await axios.put(`/api/orders/${orderId}/cancel`, {}, {
+      const response = await axios.put(`${API_BASE_URL}/api/orders/${orderId}/cancel`, {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }

@@ -17,6 +17,7 @@ import {
 } from 'recharts';
 import { useNavigate } from 'react-router-dom';
 
+const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
 // Vibrant colors for charts
 const COLORS = [
   '#4ECDC4', // Teal
@@ -48,7 +49,7 @@ function Analytics() {
       try {
         const token = localStorage.getItem('token');
         console.log('Fetching farmer stats...');
-        const response = await axios.get('http://localhost:5000/api/farmer/stats', {
+        const response = await axios.get(`${API_BASE_URL}/api/farmer/stats`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

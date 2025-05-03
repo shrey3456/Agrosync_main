@@ -4,7 +4,7 @@ import axios from 'axios';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaArrowLeft } from 'react-icons/fa';
 
 const FarmersList = () => {
-    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
     const [farmers, setFarmers] = useState([]);
     const [selectedFarmer, setSelectedFarmer] = useState(null);
     const [farmerProducts, setFarmerProducts] = useState([]);

@@ -4,7 +4,8 @@ import { signInWithGoogle } from "../firebase";
 import Navbar from "../components/Navbar";
 
 // Define API base URL
-const API_BASE_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
+console.log("API Base URL:", import.meta.env.REACT_APP_API_URL);
 
 // Email validation function
 const validateEmail = (email) => {
@@ -68,6 +69,7 @@ export default function LoginForm() {
     setLoading(true);
     try {
       console.log(`[${currentTime}] Login attempt with email: ${email}`);
+      console.log("API Base URL:", API_BASE_URL);
       const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: {

@@ -23,7 +23,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 // Use VITE_API_URL (set in your .env file) as the base URL for API calls.
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
 
 const initialFormData = {
   name: "",

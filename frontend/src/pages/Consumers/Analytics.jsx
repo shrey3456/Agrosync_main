@@ -25,6 +25,8 @@ const COLORS = [
   '#58B19F', // Green
 ];
 
+const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
+
 const Analytics = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -44,7 +46,7 @@ const Analytics = () => {
       try {
         setLoading(true);
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:5000/api/orders/stats?timeFrame=${timeFrame}`, {
+        const response = await axios.get(`${API_BASE_URL}/api/orders/stats?timeFrame=${timeFrame}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 

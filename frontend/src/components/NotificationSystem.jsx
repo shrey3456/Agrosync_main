@@ -12,7 +12,7 @@ const NotificationSystem = ({ role }) => {
   const fetchNotifications = async (forceRefresh = false) => {
     try {
       const token = localStorage.getItem('token');
-      const API_URL = 'http://localhost:5000';
+      const API_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";;
       
       // Remove the If-Modified-Since header for now to simplify the implementation
       const response = await axios.get(

@@ -23,6 +23,7 @@ import {
   Eye
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
 
 function ProductList() {
   const navigate = useNavigate();
@@ -107,7 +108,7 @@ function ProductList() {
 
       const token = localStorage.getItem('token');
       // API endpoint updated to use _id from Mongoose
-      const response = await fetch(`http://localhost:5000/api/products/farmer/${userData.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/products/farmer/${userData.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json'
@@ -267,7 +268,7 @@ function ProductList() {
       try {
         const token = localStorage.getItem('token');
         console.log('Deleting product with ID:', productId);
-        const response = await fetch(`http://localhost:5000/api/products/delete/${productId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/products/delete/${productId}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -736,7 +737,7 @@ function ProductList() {
                           <div className="flex items-center space-x-3">
                             {product.image_url && (
                               <img
-                                src={`http://localhost:5000${product.image_url.startsWith('/') ? '' : '/'}${product.image_url}`}
+                                src={`${API_BASE_URL}${product.image_url.startsWith('/') ? '' : '/'}${product.image_url}`}
                                 alt={product.name}
                                 className="w-10 h-10 rounded-lg object-cover"
                                 onError={(e) => {
@@ -811,7 +812,7 @@ function ProductList() {
                       {/* Product Image */}
                       <div className="h-48 bg-[#1a332e] relative overflow-hidden">
                         <img
-                          src={`http://localhost:5000${product.image_url.startsWith('/') ? '' : '/'}${product.image_url}`}
+                          src={`${API_BASE_URL}${product.image_url.startsWith('/') ? '' : '/'}${product.image_url}`}
                           alt={product.name}
                           className="w-full h-full object-cover"
                           onError={(e) => {

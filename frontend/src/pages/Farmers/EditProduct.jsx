@@ -5,6 +5,8 @@ import Navbar from '../../components/Navbar';
 import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
+const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
+
 function EditProduct() {
   const { productId } = useParams();
   const navigate = useNavigate();
@@ -55,7 +57,7 @@ function EditProduct() {
       
       console.log('Fetching product details for ID:', productId);
       
-      const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/products/${productId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json'
@@ -102,7 +104,7 @@ function EditProduct() {
         let imageUrl = product.image_url;
         
         if (!imageUrl.startsWith('http')) {
-          imageUrl = `http://localhost:5000${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+          imageUrl = `${API_BASE_URL}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
         }
         
         console.log('Setting image preview URL:', imageUrl);
@@ -197,7 +199,7 @@ function EditProduct() {
   
       console.log('Submitting update for product ID:', productId);
       
-      const response = await fetch(`http://localhost:5000/api/products/update/${productId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/products/update/${productId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`

@@ -5,7 +5,7 @@ import { FaFilter, FaArrowLeft, FaTruck, FaCheck, FaBoxOpen } from 'react-icons/
 import { motion, AnimatePresence } from 'framer-motion';
 
 const OrderManagement = () => {
-    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

@@ -14,6 +14,8 @@ import {
 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
+const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
+
 const CartPage = () => {
   // Add this utility function at the top of your component
   const ensureString = (location) => {
@@ -324,7 +326,7 @@ const CartPage = () => {
                           src={
                             item.image_url.startsWith("http")
                               ? item.image_url
-                              : `http://localhost:5000${item.image_url}`
+                              : `${API_BASE_URL}${item.image_url}`
                           }
                           alt={item.name}
                           className="w-full h-full object-cover"

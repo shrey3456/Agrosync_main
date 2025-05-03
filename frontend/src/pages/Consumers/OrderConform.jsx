@@ -14,6 +14,8 @@ import {
   FiClock,
 } from "react-icons/fi";
 
+const API_BASE_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
+
 const OrderConfirmationPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -135,7 +137,7 @@ const OrderConfirmationPage = () => {
                         <img
                           src={item.image_url.startsWith("http") 
                             ? item.image_url 
-                            : `http://localhost:5000${item.image_url}`}
+                            : `${API_BASE_URL}${item.image_url}`}
                           alt={item.name}
                           className="h-full w-full object-cover"
                           onError={(e) => { e.target.src = "https://via.placeholder.com/80?text=No+Image"; }}
