@@ -72,12 +72,12 @@ function About() {
     {
       name: "Shiv Patel",
       role: "Frontend Developer",
-      image: "/images/shiv.jpg",
+      image: "/shiv.jpg",
     },
     {
       name: "Parth Patel",
       role: "DevOPS Engineer",
-      image: "/images/parth.jpg",
+      image: "/parth.jpg",
     },
   ];
 
