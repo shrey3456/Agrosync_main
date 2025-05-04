@@ -90,7 +90,7 @@ const RegisterPage = () => {
 
       console.log(`Attempting Google Sign-In for ${email}`);
 
-      const res = await fetch("${API_BASE_URL}/api/auth/google", {
+      const res = await fetch(`${API_BASE_URL}/api/auth/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
