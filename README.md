@@ -3,6 +3,8 @@
 AgroSync is a MERN stack platform that connects **farmers** and **consumers** directly for fresh produce trading.  
 It ensures transparency, food safety, real-time payments, and powerful analytics for all users.
 
+🌐 **[Live Demo](https://agro-sync.netlify.app)**
+
 ---
 
 ## 🚀 Features
@@ -12,21 +14,22 @@ It ensures transparency, food safety, real-time payments, and powerful analytics
   - Product name, description, price, quantity, image
   - **Harvest date** (mandatory field)
 - Only visible to consumers within **500 km** for food safety.
-- Farmer Dashboard:
-  - Products added vs products sold (graph)
-  - Monthly sales and profit tracking
-  - Most sold products
-  - Most active consumers
+- Farmer Analytics Dashboard:
+  - Monthly/Yearly sales trends visualization
+  - Most sold products analysis
+  - Product status distribution charts
+  - Sales performance tracking
 
 ### 🛒 Consumers
 - Browse all available products.
 - On clicking a product:
   - View **all farmers** selling that product (filtered by distance).
 - Place orders via **Razorpay (Test API)**.
-- Consumer Dashboard:
-  - Monthly order analytics
-  - Most purchased products
-  - Favorite farmers
+- Consumer Analytics Dashboard:
+  - Monthly order frequency analysis
+  - Weekly/Monthly/Yearly spending patterns
+  - Most purchased products visualization
+
 ### 📈 Price Prediction 
 - A machine learning model predicts future produce prices for better buying decisions.
 
@@ -38,9 +41,10 @@ It ensures transparency, food safety, real-time payments, and powerful analytics
   - All users (Farmers/Consumers)
 - Change or update order statuses.
 - View overall analytics:
-  - Total sales
-  - Top farmers
-  - Top products
+  - Total sales and revenue metrics
+  - Top performing farmers
+  - Most popular products
+  - User engagement statistics
 
 
 
