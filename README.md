@@ -5,6 +5,10 @@ It ensures transparency, food safety, real-time payments, and powerful analytics
 
 🌐 **[Live Demo](https://agro-sync.netlify.app)**
 
+### Quick Start Guide:
+1. **Update Profile First**: After registration, complete your profile with:
+   - All Deatils
+
 ---
 
 ## 🚀 Features
