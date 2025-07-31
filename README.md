@@ -3,14 +3,6 @@
 AgroSync is a MERN stack platform that connects **farmers** and **consumers** directly for fresh produce trading.  
 It ensures transparency, food safety, real-time payments, and powerful analytics for all users.
 
-🌐 **[Live Demo](https://agro-sync.netlify.app)**
-
-### Quick Start Guide:
-1. **Update Profile First**: After registration, complete your profile with:
-   - All Deatils
-
----
-
 ## 🚀 Features
 
 ### 👨‍🌾 Farmers
