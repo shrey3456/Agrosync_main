@@ -1,0 +1,13 @@
+{
+  "certificateId": "CERT-001-1742486356410",
+  "farmerId": "FARMER-001",
+  "farmerName": "John Doe",
+  "issuedAt": "2025-03-20T15:59:43.159Z",
+  "transactionHash": "0x7c5bdfeac14156f6443d84fc80ec16da9955dbf007e76292299a32bea7115556",
+  "verification": {
+    "isValid": true,
+    "farmerId": "FARMER-001",
+    "farmerName": "John Doe",
+    "expiryDate": 1774022364
+  }
+}

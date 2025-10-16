@@ -1,0 +1,8 @@
+{
+  "contract": "FarmerCertification",
+  "address": "0x80Fb7a22cae65502b2f892d666B5fAba45763935",
+  "network": "testnet",
+  "chainId": 296,
+  "verifiedAt": "2025-03-20T15:50:26.537Z",
+  "bytecodeMatched": true
+}

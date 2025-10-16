@@ -1,0 +1,42 @@
+{
+  "name": "smart-contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for farmer verification on Hedera",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "clean": "hardhat clean",
+    "deploy": "hardhat run scripts/deploy-hedera.js --network testnet",
+    "deploy-local": "hardhat run scripts/deploy-hedera.js --network hardhat",
+    "interact": "hardhat run scripts/interact.js --network testnet",
+    "interact-local": "hardhat run scripts/interact.js --network hardhat",
+    "test-script": "hardhat run scripts/test.js --network testnet",
+    "test": "hardhat test",
+    "local-node": "hardhat node",
+    "get-bytecode": "hardhat run scripts/get-bytecode.js",
+    "verify": "hardhat run scripts/verify-contract.js --network testnet",
+    "test-certs": "hardhat run scripts/test-certificates.js --network testnet",
+    "test-certs-local": "hardhat run scripts/test-certificates.js --network hardhat",
+    "coverage": "hardhat coverage"
+  },
+  "keywords": [
+    "blockchain",
+    "hedera",
+    "smart-contract"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.6",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "chai": "^4.3.6",
+    "ethereum-waffle": "^3.4.4",
+    "ethers": "^5.6.9",
+    "hardhat": "^2.9.9"
+  },
+  "dependencies": {
+    "@hashgraph/sdk": "^2.24.0",
+    "dotenv": "^16.0.1",
+    "uuid": "^9.0.0"
+  }
+}

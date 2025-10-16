@@ -1,0 +1,13 @@
+{
+  "certificateId": "CERT-002-1742486356412",
+  "farmerId": "FARMER-002",
+  "farmerName": "Jane Smith",
+  "issuedAt": "2025-03-20T16:00:02.218Z",
+  "transactionHash": "0x2885b74ad2deceff10d82f7880ed1e2e74848bc5742af49b64ac5dad57e8758f",
+  "verification": {
+    "isValid": true,
+    "farmerId": "FARMER-002",
+    "farmerName": "Jane Smith",
+    "expiryDate": 1774022389
+  }
+}

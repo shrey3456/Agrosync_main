@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "esbuild": "^0.25.3",
+    "mime": "^4.0.7",
+    "mongoose": "^8.12.1",
+    "multer": "^1.4.5-lts.2",
+    "nodemon": "^3.1.9",
+    "razorpay": "^2.9.6",
+    "request": "^2.88.2",
+    "tough-cookie": "^5.1.2",
+    "vite": "^6.3.3"
+  }
+}
